@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Our simple HTTP server</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+
+  <script>
+    const parseJSON = (xhr, content) => {
+      if (xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json') {
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
+
+        if (obj.message) {
+          content.innerHTML += `<p>Message: ${obj.message}</p>`;
+        }
+        else if(obj.users)
+        {
+          content.innerHTML += `<p>${obj.users}</p>`;
+        }
+      }
+
+    };
+
+    const handleResponse = (xhr) => {
+      const content = document.querySelector('#content');
+
+      switch (xhr.status) {
+        case 200:
+          content.innerHTML = '<b>Success!</b>';
+          break;
+        case 201:
+          content.innerHTML = '<b>Created!</b>';
+          break;
+        case 204:
+          content.innerHTML = '<b>Updated (no content)!</b>';
+          break;
+        case 400:
+          content.innerHTML = '<b>Bad Request</b>';
+          break;
+        case 404:
+          content.innerHTML = '<b>Resource Not Found</b>';
+          break;
+        default:
+          content.innerHTML = '<b>Error code no implemented by client</b>';
+          break;
+      }
+
+      parseJSON(xhr, content);
+    };
+
+    const sendPost = (e, playlistForm) => {
+      e.preventDefault();
+
+      const nameAction = playlistForm.getAttribute('action');
+      const nameMethod = playlistForm.getAttribute('method');
+
+      const songField = playlistForm.querySelector('#songField');
+      const artistField = playlistForm.querySelector('#artistField');
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(nameMethod, nameAction);
+
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+      xhr.onload = () => handleResponse(xhr);
+
+      const formData = `song=${songField.value}&artist=${artistField.value}`;
+      xhr.send(formData);
+
+      return false;
+    };
+
+    const sendUsers = (e) => {
+      e.preventDefault();
+      const method = methodSelect.value;
+      const url = urlField.value;
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, url);
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.onload = () => handleResponse(xhr);
+
+      xhr.send();
+      return false;
+    };
+
+    const init = () => {
+      const playlistForm = document.querySelector('#playlistForm');
+      const userForm = document.querySelector('#userForm');
+
+      const addUser = (e) => sendPost(e, playlistForm);
+      const getUser = (e) => sendUsers(e, userForm);
+
+      playlistForm.addEventListener('submit', addUser);
+      userForm.addEventListener("submit", sendUsers);
+    };
+
+    window.onload = init;
+  </script>
+</head>
+
+<body>
+  <section id="top">
+    <h3>Playlist Creator</h3>
+    <form id="playlistForm" action="/addUser" method="post">
+      <label for="song">Song Title: </label>
+      <input id="songField" type="text" name="song" />
+      <label for="artist">Artist: </label>
+      <input id="artistField" type="text" name="artist"/>
+      <input type="submit" value="Add to Playlist" />
+    </form>
+    <!-- Testing purpose - delete later -->
+    <h3>For testing purposes</h3>
+    <form id="userForm" action="/getUsers" method="get">
+      <select id='urlField'>
+        <option value='/getUsers'>/getUsers</option>
+        <option value='/notReal'>/notReal</option>
+      </select>
+      <select id="methodSelect">
+        <option value="GET">GET</option>
+        <option value="HEAD">HEAD</option>
+      </select>
+      <input type="submit" value="Send" />
+    </form>
+  </section>
+  <section id="content">
+  </section>
+</body>
+
+</html>

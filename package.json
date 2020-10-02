@@ -1,0 +1,34 @@
+{
+  "name": "430-project-1",
+  "version": "1.0.0",
+  "description": "Project 1 - Playlist",
+  "main": "server.js",
+  "dependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests complete\"",
+    "nodemon": "nodemon --watch ./src ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RosareMililani/430-project-1.git"
+  },
+  "keywords": [
+    "project",
+    "playlist"
+  ],
+  "author": "Mililani Rosare",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RosareMililani/430-project-1/issues"
+  },
+  "homepage": "https://github.com/RosareMililani/430-project-1#readme"
+}
