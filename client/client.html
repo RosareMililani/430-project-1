@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Our simple HTTP server</title>
+  <title>Playlist Maker</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
 
   <script>
@@ -14,8 +14,7 @@
         if (obj.message) {
           content.innerHTML += `<p>Message: ${obj.message}</p>`;
         }
-        else if(obj.users)
-        {
+        else if (obj.users) {
           content.innerHTML += `<p>${obj.users}</p>`;
         }
       }
@@ -49,14 +48,14 @@
       parseJSON(xhr, content);
     };
 
-    const sendPost = (e, playlistForm) => {
+    const sendPost = (e, songsForm) => {
       e.preventDefault();
 
-      const nameAction = playlistForm.getAttribute('action');
-      const nameMethod = playlistForm.getAttribute('method');
+      const nameAction = songsForm.getAttribute('action');
+      const nameMethod = songsForm.getAttribute('method');
 
-      const songField = playlistForm.querySelector('#songField');
-      const artistField = playlistForm.querySelector('#artistField');
+      const songField = songsForm.querySelector('#songField');
+      const artistField = songsForm.querySelector('#artistField');
 
       const xhr = new XMLHttpRequest();
       xhr.open(nameMethod, nameAction);
@@ -87,15 +86,107 @@
     };
 
     const init = () => {
-      const playlistForm = document.querySelector('#playlistForm');
+      const songsForm = document.querySelector('#songsForm');
       const userForm = document.querySelector('#userForm');
 
-      const addUser = (e) => sendPost(e, playlistForm);
+      const addUser = (e) => sendPost(e, songsForm);
       const getUser = (e) => sendUsers(e, userForm);
 
-      playlistForm.addEventListener('submit', addUser);
+      songsForm.addEventListener('submit', addUser);
       userForm.addEventListener("submit", sendUsers);
+
+      /* Choose a playlist */
+      playlistSelect.addEventListener("change", () => {
+        console.log("im changing..");
+
+        /* create different things based on selection */
+        switch (document.querySelector("#playlistSelect").value) {
+          case "select":
+            console.log("select");
+
+            //call new dropdown
+            //createNewDropDown();
+            //hide 
+            document.getElementById("createPlaylist").style.visibility = "hidden";
+            //show 
+            document.getElementById("choosePlaylist").style.visibility = "visible";
+            document.getElementById("songsForm").style.visibility = "visible";
+            break;
+          case "create":
+            console.log("creating");
+
+            //call new playlist creator
+            //newPlaylist();
+
+            //hide 
+            document.getElementById("choosePlaylist").style.visibility = "hidden";
+            document.getElementById("songsForm").style.visibility = "hidden";
+            //show 
+            document.getElementById("createPlaylist").style.visibility = "visible";
+
+            break;
+        }
+      });
+
+      //hide all when startup
+      document.getElementById("songsForm").style.visibility = "hidden";
+      document.getElementById("choosePlaylist").style.visibility = "hidden";
+      document.getElementById("createPlaylist").style.visibility = "hidden";
     };
+
+    //keep for now - in case...
+    //creates a newdropdown
+    /* function createNewDropDown() {
+      //hide 
+      document.getElementById("createPlaylist").style.visibility = "hidden";
+      //show 
+      document.getElementById("choosePlaylist").style.visibility = "visible";
+      document.getElementById("songsForm").style.visibility = "visible";
+
+      //create
+      let values = ["My September", "Sleepy Playlist"];
+
+      let select = document.createElement("select");
+      select.name = "playlist";
+      select.id = "playlist"
+
+      for (const val of values) {
+        let option = document.createElement("option");
+        option.value = val;
+        option.text = val.charAt(0).toUpperCase() + val.slice(1);
+        select.appendChild(option);
+      }
+
+      let label = document.createElement("label");
+      label.innerHTML = "Choose a playlist to Edit: "
+      label.htmlFor = "playlist";
+
+      document.getElementById("choosePlaylist").appendChild(label).appendChild(select);
+    } */
+
+    //creates a text field and button to create a playlist
+    /* function newPlaylist() {
+      //hide 
+      document.getElementById("choosePlaylist").style.visibility = "hidden";
+      document.getElementById("songsForm").style.visibility = "hidden";
+      //show 
+      document.getElementById("createPlaylist").style.visibility = "visible";
+
+      //create
+      let inputPlaylist = document.createElement("input");
+      inputPlaylist.name = "inputPlaylist";
+      inputPlaylist.id = "inputPlaylist"
+
+      inputPlaylist.setAttribute("type", "text");
+      inputPlaylist.setAttribute("value", "");
+      document.body.appendChild(inputPlaylist);
+
+      let label = document.createElement("label");
+      label.innerHTML = "Enter Playlist Name: "
+      label.htmlFor = "inputPlaylist";
+
+      document.getElementById("createPlaylist").appendChild(label).appendChild(inputPlaylist);
+    } */
 
     window.onload = init;
   </script>
@@ -104,13 +195,41 @@
 <body>
   <section id="top">
     <h3>Playlist Creator</h3>
-    <form id="playlistForm" action="/addUser" method="post">
+    <!-- Choose a playlist or create a new one-->
+    <form id="playlistForm" action="select">
+      <label for="playlistChooser">Select One:</label>
+      <select id="playlistSelect">
+        <option disabled selected value> -- Select an option -- </option>
+        <option value="select">Select Playlist</option>
+        <option value="create">Create New</option>
+      </select>
+      <br>
+      <!-- <div id="choosePlaylist"></div> -->
+      <div id=choosePlaylist>
+        <label for="choosePlaylistLabel">Choose a Playlist:</label>
+        <select id="allPlaylist">
+          <option value="october">My October</option>
+          <option value="sleepy">Sleep Playlist</option>
+        </select>
+      </div>
+      <!-- <div id="createPlaylist"></div> -->
+      <div id="createPlaylist">
+        <label for="playlistName">Playlist Name: </label>
+        <input id="playlistField" type="text" name="playlistName" />
+        <button type="createButton">Create!</button>
+      </div>
+      <br>
+    </form>
+
+    <!-- Add a song -->
+    <form id="songsForm" action="/addUser" method="post">
       <label for="song">Song Title: </label>
       <input id="songField" type="text" name="song" />
       <label for="artist">Artist: </label>
-      <input id="artistField" type="text" name="artist"/>
+      <input id="artistField" type="text" name="artist" />
       <input type="submit" value="Add to Playlist" />
     </form>
+
     <!-- Testing purpose - delete later -->
     <h3>For testing purposes</h3>
     <form id="userForm" action="/getUsers" method="get">
