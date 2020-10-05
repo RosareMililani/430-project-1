@@ -188,6 +188,16 @@
       document.getElementById("createPlaylist").appendChild(label).appendChild(inputPlaylist);
     } */
 
+    function addToPlaylist() {
+      let x = document.getElementById("allPlaylist");
+      let textbox = document.getElementById("playlistField").value
+      console.log(textbox);
+      let option = document.createElement("option");
+      option.text = textbox;
+      console.log(option);
+      x.add(option);
+    }
+
     window.onload = init;
   </script>
 </head>
@@ -216,7 +226,7 @@
       <div id="createPlaylist">
         <label for="playlistName">Playlist Name: </label>
         <input id="playlistField" type="text" name="playlistName" />
-        <button type="createButton">Create!</button>
+        <button type="createButton" onclick="addToPlaylist()">Create!</button>
       </div>
       <br>
     </form>
