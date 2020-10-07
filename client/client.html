@@ -5,6 +5,9 @@
   <title>Playlist Maker</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
 
+  <!-- For icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <script>
     const parseJSON = (xhr, content) => {
       if (xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json') {
@@ -191,11 +194,17 @@
     function addToPlaylist() {
       let x = document.getElementById("allPlaylist");
       let textbox = document.getElementById("playlistField").value
-      console.log(textbox);
+      //console.log(textbox);
       let option = document.createElement("option");
       option.text = textbox;
-      console.log(option);
+      //console.log(option);
       x.add(option);
+    }
+
+    function deleteDiv()
+    {
+      document.getElementById("results").innerHTML = "";
+      document.getElementById("results").style.border = "none";
     }
 
     window.onload = init;
@@ -222,14 +231,15 @@
           <option value="sleepy">Sleep Playlist</option>
         </select>
       </div>
-      <!-- <div id="createPlaylist"></div> -->
-      <div id="createPlaylist">
-        <label for="playlistName">Playlist Name: </label>
-        <input id="playlistField" type="text" name="playlistName" />
-        <button type="createButton" onclick="addToPlaylist()">Create!</button>
-      </div>
+      
       <br>
     </form>
+    <!-- <div id="createPlaylist"></div> -->
+    <div id="createPlaylist">
+      <label for="playlistName">Playlist Name: </label>
+      <input id="playlistField" type="text" name="playlistName" />
+      <button type="createButton" onclick="addToPlaylist()">Create!</button>
+    </div>
 
     <!-- Add a song -->
     <form id="songsForm" action="/addUser" method="post">
@@ -255,6 +265,15 @@
     </form>
   </section>
   <section id="content">
+  </section>
+  <!-- Example Output -->
+  <h3>This an example output- still working</h3>
+  <section id="displaySongs">
+    <div id= 'results'>
+      <p class="artistName">BTS</p>
+      <p class ="artistSong">Dynamite</p>
+      <button class="btn" onclick="deleteDiv()"><i style="font-size:24px" class="fa">&#xf014;</i></button>
+    </div>
   </section>
 </body>
 
