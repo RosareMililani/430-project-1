@@ -31,31 +31,6 @@ const handlePost = (request, response, parsedUrl) => {
       jsonHandler.addUser(request, response, bodyParams);
     });
   }
-
-  if (parsedUrl.pathname === '/notReal') {
-    const body = [];
-
-    // error occurs while trying to read information from client
-    // asynchronus
-    request.on('error', (err) => {
-      console.dir(err);
-      response.statusCode = 404;
-      response.end();
-    });
-
-    // get last chunk - new piece of info
-    request.on('data', (chunk) => {
-      body.push(chunk);
-    });
-
-    // take all elements of array and combine
-    request.on('end', () => {
-      const bodyString = Buffer.concat(body).toString();
-      const bodyParams = query.parse(bodyString);
-
-      jsonHandler.notRealUser(request, response, bodyParams);
-    });
-  }
 };
 
 // direct links
@@ -66,8 +41,6 @@ const handleGet = (request, response, parsedUrl) => {
     jsonHandler.getUsers(request, response);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
-  } else if (parsedUrl.pathname === '/badUsers') {
-    htmlHandler.notRealUser(request, response);
   } else {
     htmlHandler.getNotFound(request, response);
   }

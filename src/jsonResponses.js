@@ -26,14 +26,6 @@ const getUsers = (request, response) => {
   respondJSON(request, response, 200, responseJSON);
 };
 
-const notReal = (request, response) => {
-  const responseJSON = {
-    users,
-  };
-
-  respondJSON(request, response, 400, responseJSON);
-};
-
 const addUser = (request, response, body) => {
   const responseJSON = {
     message: 'Song and artist are both required',
@@ -63,29 +55,8 @@ const addUser = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
-const notRealUser = (request, response, body) => {
-  const responseJSON = {
-    message: 'Song and artist are both required',
-  };
-
-  if (!body.song || !body.artist) {
-    responseJSON.id = 'notFound';
-    return respondJSON(request, response, 404, responseJSON);
-  }
-
-  const responseCode = 404;
-
-  if (responseCode === 404) {
-    responseJSON.message = 'Resource Not Found';
-    return respondJSON(request, response, responseCode, responseJSON);
-  }
-
-  return respondJSONMeta(request, response, responseCode);
-};
 
 module.exports = {
   getUsers,
   addUser,
-  notRealUser,
-  notReal,
 };
