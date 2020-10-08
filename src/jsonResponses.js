@@ -17,7 +17,8 @@ const respondJSONMeta = (request, response, status) => {
 
 const getUsers = (request, response) => {
   const responseJSON = {
-    users: JSON.stringify(users),
+    //users: JSON.stringify(users),
+    users
   };
 
   console.log(users);

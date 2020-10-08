@@ -19,6 +19,11 @@
         }
         else if (obj.users) {
           content.innerHTML += `<p>${obj.users}</p>`;
+          displaySongs.innerHTML += `<div class = 'results'>`;
+          displaySongs.innerHTML += `<b><p class='artistName'>${obj.artist}</p></b>`;
+          displaySongs.innerHTML += `<i><p class='artistSong'>${obj.song}</p></i>`;
+          displaySongs.innerHTML += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button></div>`;
+
         }
       }
 
@@ -137,74 +142,35 @@
       document.getElementById("createPlaylist").style.visibility = "hidden";
     };
 
-    //keep for now - in case...
-    //creates a newdropdown
-    /* function createNewDropDown() {
-      //hide 
-      document.getElementById("createPlaylist").style.visibility = "hidden";
-      //show 
-      document.getElementById("choosePlaylist").style.visibility = "visible";
-      document.getElementById("songsForm").style.visibility = "visible";
-
-      //create
-      let values = ["My September", "Sleepy Playlist"];
-
-      let select = document.createElement("select");
-      select.name = "playlist";
-      select.id = "playlist"
-
-      for (const val of values) {
-        let option = document.createElement("option");
-        option.value = val;
-        option.text = val.charAt(0).toUpperCase() + val.slice(1);
-        select.appendChild(option);
-      }
-
-      let label = document.createElement("label");
-      label.innerHTML = "Choose a playlist to Edit: "
-      label.htmlFor = "playlist";
-
-      document.getElementById("choosePlaylist").appendChild(label).appendChild(select);
-    } */
-
-    //creates a text field and button to create a playlist
-    /* function newPlaylist() {
-      //hide 
-      document.getElementById("choosePlaylist").style.visibility = "hidden";
-      document.getElementById("songsForm").style.visibility = "hidden";
-      //show 
-      document.getElementById("createPlaylist").style.visibility = "visible";
-
-      //create
-      let inputPlaylist = document.createElement("input");
-      inputPlaylist.name = "inputPlaylist";
-      inputPlaylist.id = "inputPlaylist"
-
-      inputPlaylist.setAttribute("type", "text");
-      inputPlaylist.setAttribute("value", "");
-      document.body.appendChild(inputPlaylist);
-
-      let label = document.createElement("label");
-      label.innerHTML = "Enter Playlist Name: "
-      label.htmlFor = "inputPlaylist";
-
-      document.getElementById("createPlaylist").appendChild(label).appendChild(inputPlaylist);
-    } */
-
     function addToPlaylist() {
       let x = document.getElementById("allPlaylist");
       let textbox = document.getElementById("playlistField").value
-      //console.log(textbox);
+      console.log(textbox);
       let option = document.createElement("option");
-      option.text = textbox;
-      //console.log(option);
-      x.add(option);
+      //option.text = textbox;
+      //console.log("option picked: " + option.text);
+      //x.add(option);
+      //content.innerHTML = `<p>Playlist added!`;
+
+      /* working on */
+      for (let i = 0; i < x.options.length; i++) {
+        if (x.options[i].value != textbox) {
+          content.innerHTML = `<p>Playlist added!</p>`;
+          option.text = textbox;
+          x.add(option);
+          console.log("avaliable");
+        }
+        else {
+          content.innerHTML = `<p>Playlist already exists</p>`;
+          console.log("already exists");
+        }
+      }
     }
 
-    function deleteDiv()
-    {
+    function deleteDiv() {
       document.getElementById("results").innerHTML = "";
       document.getElementById("results").style.border = "none";
+      //delete users.song;
     }
 
     window.onload = init;
@@ -231,7 +197,7 @@
           <option value="sleepy">Sleep Playlist</option>
         </select>
       </div>
-      
+
       <br>
     </form>
     <!-- <div id="createPlaylist"></div> -->
@@ -267,12 +233,16 @@
   <section id="content">
   </section>
   <!-- Example Output -->
-  <h3>This an example output- still working</h3>
+  <h3>This an example output- still working - fixing classes</h3>
   <section id="displaySongs">
-    <div id= 'results'>
-      <p class="artistName">BTS</p>
-      <p class ="artistSong">Dynamite</p>
-      <button class="btn" onclick="deleteDiv()"><i style="font-size:24px" class="fa">&#xf014;</i></button>
+    <div id='results'>
+      <b>
+        <p class="artistName">BTS</p>
+      </b>
+      <i>
+        <p class="artistSong">Dynamite</p>
+      </i>
+      <button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button>
     </div>
   </section>
 </body>
