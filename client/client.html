@@ -20,6 +20,9 @@
         else if (obj.users) {
           content.innerHTML += `<p>${obj.users}</p>`;
 
+          //clear data - get ready to display results again
+          document.querySelector("#displaySongs").innerHTML = "";
+
           for (let userData of Object.keys(obj.users)) {
             console.log(userData);
             console.log(userData.artist);
@@ -120,8 +123,6 @@
           case "select":
             console.log("select");
 
-            //call new dropdown
-            //createNewDropDown();
             //hide 
             document.getElementById("createPlaylist").style.visibility = "hidden";
             //show 
@@ -130,10 +131,6 @@
             break;
           case "create":
             console.log("creating");
-
-            //call new playlist creator
-            //newPlaylist();
-
             //hide 
             document.getElementById("choosePlaylist").style.visibility = "hidden";
             document.getElementById("songsForm").style.visibility = "hidden";
@@ -234,7 +231,7 @@
         <option value="GET">GET</option>
         <option value="HEAD">HEAD</option>
       </select>
-      <input type="submit" value="Send" />
+      <input type="submit" value="Display Songs" />
     </form>
   </section>
   <section id="content">
