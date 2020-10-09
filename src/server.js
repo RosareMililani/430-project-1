@@ -10,7 +10,7 @@ const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/addUser') {
     const body = [];
 
-    // error occurs while trying to read information from client
+    // error occurs while trying to read information from clients
     // asynchronus
     request.on('error', (err) => {
       console.dir(err);

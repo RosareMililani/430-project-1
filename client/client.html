@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Playlist Maker</title>
+  <title>Playlist Maker!!</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
 
   <!-- For icon -->
@@ -19,11 +19,19 @@
         }
         else if (obj.users) {
           content.innerHTML += `<p>${obj.users}</p>`;
-          displaySongs.innerHTML += `<div class = 'results'>`;
-          displaySongs.innerHTML += `<b><p class='artistName'>${obj.users.artist}</p></b>`;
-          displaySongs.innerHTML += `<i><p class='artistSong'>${obj.users.song}</p></i>`;
-          displaySongs.innerHTML += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button></div>`;
 
+          for (let userData of Object.keys(obj.users)) {
+            console.log(userData);
+            console.log(userData.artist);
+
+            //format data
+            let line = `<div id = 'results'>`;
+            line += `<b><p class='artistName'>${userData}</p></b>`;
+            line += `<i><p class='artistSong'>${userData}</p></i>`;
+            line += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button></div>`;
+
+            document.querySelector("#displaySongs").innerHTML += line;
+          }
         }
       }
 

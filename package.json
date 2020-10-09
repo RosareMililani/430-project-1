@@ -2,7 +2,7 @@
   "name": "430-project-1",
   "version": "1.0.0",
   "description": "Project 1 - Playlist",
-  "main": "server.js",
+  "main": "./src/server.js",
   "dependencies": {
     "nodemon": "^2.0.4"
   },
