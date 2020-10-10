@@ -15,7 +15,7 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
-const getUsers = (request, response) => {
+const getPlaylist = (request, response) => {
   const responseJSON = {
     //users: JSON.stringify(users),
     users
@@ -57,6 +57,6 @@ const addUser = (request, response, body) => {
 
 
 module.exports = {
-  getUsers,
+  getPlaylist,
   addUser,
 };

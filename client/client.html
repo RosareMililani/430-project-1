@@ -116,7 +116,7 @@
 
       /* Choose a playlist */
       playlistSelect.addEventListener("change", () => {
-        console.log("im changing..");
+        //console.log("im changing..");
 
         /* create different things based on selection */
         switch (document.querySelector("#playlistSelect").value) {
@@ -149,25 +149,23 @@
 
     function addToPlaylist() {
       let x = document.getElementById("allPlaylist");
-      let textbox = document.getElementById("playlistField").value
-      console.log(textbox);
+      let textbox = document.getElementById("playlistField").value;
+      //console.log(textbox);
       let option = document.createElement("option");
-      //option.text = textbox;
+      option.text = textbox;
       //console.log("option picked: " + option.text);
-      //x.add(option);
-      //content.innerHTML = `<p>Playlist added!`;
+      x.appendChild(option);
+      content.innerHTML = `<p>Playlist added!`;
 
-      /* working on */
-      for (let i = 0; i < x.options.length; i++) {
-        if (x.options[i].value != textbox) {
-          content.innerHTML = `<p>Playlist added!</p>`;
-          option.text = textbox;
-          x.add(option);
-          console.log("avaliable");
-        }
-        else {
-          content.innerHTML = `<p>Playlist already exists</p>`;
-          console.log("already exists");
+      for (let i = 0; i < x.options.length -1; i++) {
+        //add in the playlist - to then get removed
+        x.appendChild(option);
+        //remove the option - since it is a duplicate
+        if (x.options[i].value === textbox) {
+          //console.log("this is the option: " + x.options[i].value);
+          
+          x.remove(x.options.length-1);
+          content.innerHTML = `<p>Playlist removed!</p>`;
         }
       }
     }
@@ -187,19 +185,21 @@
     <h3>Playlist Creator</h3>
     <!-- Choose a playlist or create a new one-->
     <form id="playlistForm" action="select">
-      <label for="playlistChooser">Select One:</label>
+      <label for="playlistChooser">Select or Create a Playlist:</label>
       <select id="playlistSelect">
         <option disabled selected value> -- Select an option -- </option>
         <option value="select">Select Playlist</option>
-        <option value="create">Create New</option>
+        <option value="create">Create New Playlist</option>
       </select>
       <br>
       <!-- <div id="choosePlaylist"></div> -->
       <div id=choosePlaylist>
         <label for="choosePlaylistLabel">Choose a Playlist:</label>
         <select id="allPlaylist">
-          <option value="october">My October</option>
-          <option value="sleepy">Sleep Playlist</option>
+          <option disabled selected value> -- Select an option -- </option>
+          <!-- to be deleted -->
+          <!-- <option value="october">My October</option>
+          <option value="sleepy">Sleep Playlist</option> -->
         </select>
       </div>
 
@@ -223,9 +223,9 @@
 
     <!-- Testing purpose - delete later -->
     <h3>For testing purposes</h3>
-    <form id="userForm" action="/getUsers" method="get">
+    <form id="userForm" action="/getPlaylist" method="get">
       <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
+        <option value='/getPlaylist'>/getPlaylist</option>
       </select>
       <select id="methodSelect">
         <option value="GET">GET</option>
@@ -239,7 +239,7 @@
   <!-- Example Output -->
   <h3>Your list of Songs:</h3>
   <section id="displaySongs">
-    <div id='results'>
+    <!-- <div id='results'>
       <b>
         <p class="artistName">BTS</p>
       </b>
@@ -247,7 +247,7 @@
         <p class="artistSong">Dynamite</p>
       </i>
       <button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button>
-    </div>
+    </div> -->
   </section>
 </body>
 
