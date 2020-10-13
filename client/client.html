@@ -28,28 +28,42 @@
           for (let userData of Object.keys(obj.users)) {
             console.log(userData);
 
+            document.getElementById("listing").style.visibility = "visible";
+
             //format data
             let line = `<div id = 'results'>`;
             line += `<b><p class='artistName'>${obj.users[userData].song}</p></b>`;
             line += `<i><p class='artistSong'>${obj.users[userData].artist}</p></i>`;
             line += `<p class='artistDescription'>Description: ${obj.users[userData].description}</p></div>`;
-            line += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button>`;
+            /* line += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button>`; */
 
             document.querySelector("#displaySongs").innerHTML += line;
           }
         }
+        /* function deleteSong() {
+        console.log("actuall being called");
+        //get this to work properly
+        let deleteTextbox = document.getElementById("deleteField").value;
+        console.log(deleteTextbox);
+        console.log("This is the field" + document.getElementById("deleteName").value)
+
+        //delete the data
+        for (let userData of Object.keys(myObject)) {
+          if (userData === deleteTextbox) {
+            delete myObject[userData];
+          }
+        }
+        console.log("reaching");
+      } */
+
+        document.querySelector("#deleteButton").addEventListener("click", () => {
+          console.log("being called");
+        });
       }
+
+
 
     };
-
-    const deleteJSON = (xhr, content) => {
-      if (xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json') {
-        const obj = JSON.parse(xhr.response);
-        console.dir(obj);
-      }
-
-      delete obj.song;
-    }
 
     const handleResponse = (xhr) => {
       const content = document.querySelector('#content');
@@ -158,6 +172,16 @@
             document.getElementById("createPlaylist").style.visibility = "visible";
 
             break;
+          case "delete":
+            console.log("deleting");
+            //hide
+            document.getElementById("choosePlaylist").style.visibility = "hidden";
+            document.getElementById("songsForm").style.visibility = "hidden";
+            document.getElementById("userForm").style.visibility = "hidden";
+            document.getElementById("displaySongs").style.visibility = "hidden";
+            document.getElementById("displayInformation").style.visibility = "hidden";
+            document.getElementById("addDisplayName").style.visibility = "hidden";
+            document.getElementById("createPlaylist").style.visibility = "hidden";
         }
       });
 
@@ -201,10 +225,10 @@
         //add in the playlist - to then get removed
         x.appendChild(optionPlaylist);
         //remove the option - since it is a duplicate
-        if (x.options[i].value === textboxPlaylist) {
+        if (x.options[i].value === textboxPlaylist || textboxPlaylist.value == "") {
 
           x.remove(x.options.length - 1);
-          content.innerHTML = `<p>Playlist removed!</p>`;
+          content.innerHTML = `<p>Duplicate or nothing was added!</p>`;
         }
       }
 
@@ -214,9 +238,9 @@
         y.appendChild(optionName);
 
         //remove the option - since it is a duplicate
-        if (y.options[j].value === optionName) {
+        if (y.options[j].value === optionName || optionName.value == "") {
           y.remove(y.options.length - 1);
-          content.innerHTML = `<p>Playlist removed!</p>`;
+          content.innerHTML = `<p>Duplicate or nothing was added!</p>`;
         }
       }
     }
@@ -228,11 +252,12 @@
       let addNameDisplay = document.querySelector("#allNames").value;
       console.log(addNameDisplay);
 
-      /* input disabled display */
-      
+      //clear if display button is click, or updated with new information
+      document.querySelector("#displayInformation").innerHTML = "";
+
+      //display information
       let line = `<p>${addPlaylistDisplay} by ${addNameDisplay}</p>`;
-        document.querySelector("#displayInformation").innerHTML += line;
-      
+      document.querySelector("#displayInformation").innerHTML += line;
     }
 
     function deleteDiv() {
@@ -240,6 +265,25 @@
       document.getElementById("results").style.border = "none";
       //delete users.song;
     }
+
+    /* function deleteSong(xhr, content) {
+      const obj = JSON.parse(xhr.response);
+      console.dir(obj);
+      console.log("actuall being called");
+      console.log("second call")
+      //get this to work properly
+      let deleteTextbox = document.getElementById("deleteField").value;
+      console.log(deleteTextbox);
+      console.log("This is the field" + document.getElementById("deleteName").value)
+
+      //delete the data
+      for (let userData of Object.keys(obj.users)) {
+        if (userData === deleteTextbox) {
+          delete myObject[userData];
+        }
+      }
+      console.log("reaching");
+    } */
 
     window.onload = init;
   </script>
@@ -255,30 +299,31 @@
         <option disabled selected value> -- Select an option -- </option>
         <option value="create">Name your Playlist</option>
         <option value="select">Select Playlist</option>
+        <option value="delete">Delete a Song</option>
       </select>
       <br>
 
       <div id=choosePlaylist>
         <label for="choosePlaylistLabel">Choose a Playlist:</label>
         <select id="allPlaylist">
-          <option disabled selected value> -- Select an option -- </option>
+          <option disabled selected value=""> -- Select an option -- </option>
         </select>
         <label for="chooseNameLabel">Choose a Name:</label>
         <select id="allNames">
-          <option disabled selected value> -- Select an option -- </option>
-        </select> 
+          <option disabled selected value=""> -- Select an option -- </option>
+        </select>
       </div>
       <br>
     </form>
-    <div id = "addDisplayName">
+    <div id="addDisplayName">
       <button class="createDisplay" onclick="addDisplay()">Display!</button>
     </div>
-    
+
 
     <div id="createPlaylist">
-      <span class="required">*</span><label for="playlistName">Playlist Name: </label>
+      <label for="playlistName">Playlist Name: </label>
       <input id="playlistField" type="text" name="playlistName" />
-      <span class="required">*</span><label for="yourName">Your Name: </label>
+      <label for="yourName">Your Name: </label>
       <input id="yourNameField" type="text" name="yourName" />
       <button class="createButton" onclick="addToPlaylist()">Create!</button>
     </div>
@@ -306,6 +351,14 @@
       </div>
       <input type="submit" value="Display Songs" />
     </form>
+
+
+    <!-- Delete Songs -->
+    <div id="deleteSongs">
+      <label for="deleteName">Song to Delete: </label>
+      <input type="text" id="deleteName" name="deleteName" />
+      <button id="deleteButton">Delete!</button>
+    </div>
   </section>
 
   <section id="content">
@@ -315,7 +368,7 @@
   </section>
 
   <section id="displaySongs">
-    <h4>Your List of Songs:</h4>
+    <h4 id="listing">Your List of Songs:</h4>
   </section>
 </body>
 
