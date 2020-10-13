@@ -6,6 +6,18 @@ html, body {
   background-color: lightskyblue;
 }
 
+h3{
+  font-family: 'Courgette', cursive;
+  font-size: 40px;
+  padding:15px;
+}
+
+h4{
+  font-family: 'Courgette', cursive;
+  font-size: 20px;
+  padding:15px;
+}
+
 #top {
   text-align: center;
   margin: 0 auto;
@@ -29,7 +41,7 @@ html, body {
   padding: 12px;
 }
 
-.artistName, .artistSong {
+.artistName, .artistSong, .artistDescription{
   display: inline-block;
   font-size:20px;
 }
@@ -38,6 +50,12 @@ html, body {
 {
   position: absolute;
   right: 50%;
+}
+
+.artistDescription
+{
+  position: absolute;
+  right:30%;
 }
 
 .btn {
@@ -54,4 +72,36 @@ html, body {
 .btn:hover {
   color: #ff4c4c;
   text-align:center;
+}
+
+.buttonEdit
+{
+  position: absolute;
+  right: 30%;
+}
+
+.required{
+  color:red;
+}
+
+input[type=submit], .createButton, .createDisplay{
+  background-color: #faf7ad;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-family: 'Courgette', cursive;
+}
+
+input[type=submit]:hover, .createButton:hover, .createDisplay {
+  background-color: #fef76d;
+  border-style: solid;
+  border-radius: 12px;
+  padding: 10px 15px;
+}
+
+#displayInformation
+{
+  font-family: 'Courgette', cursive;
+  text-align: center;
+  text-decoration: underline;
 }

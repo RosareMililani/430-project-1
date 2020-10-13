@@ -8,6 +8,8 @@
   <!-- For icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+  <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+
   <script>
     const parseJSON = (xhr, content) => {
       if (xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json') {
@@ -25,13 +27,13 @@
 
           for (let userData of Object.keys(obj.users)) {
             console.log(userData);
-            console.log(userData.artist);
 
             //format data
             let line = `<div id = 'results'>`;
-            line += `<b><p class='artistName'>${userData}</p></b>`;
-            line += `<i><p class='artistSong'>${userData}</p></i>`;
-            line += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button></div>`;
+            line += `<b><p class='artistName'>${obj.users[userData].song}</p></b>`;
+            line += `<i><p class='artistSong'>${obj.users[userData].artist}</p></i>`;
+            line += `<p class='artistDescription'>Description: ${obj.users[userData].description}</p></div>`;
+            line += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button>`;
 
             document.querySelector("#displaySongs").innerHTML += line;
           }
@@ -39,6 +41,15 @@
       }
 
     };
+
+    const deleteJSON = (xhr, content) => {
+      if (xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json') {
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
+      }
+
+      delete obj.song;
+    }
 
     const handleResponse = (xhr) => {
       const content = document.querySelector('#content');
@@ -75,6 +86,7 @@
 
       const songField = songsForm.querySelector('#songField');
       const artistField = songsForm.querySelector('#artistField');
+      const descriptionField = songsForm.querySelector('#descriptionField');
 
       const xhr = new XMLHttpRequest();
       xhr.open(nameMethod, nameAction);
@@ -84,7 +96,7 @@
 
       xhr.onload = () => handleResponse(xhr);
 
-      const formData = `song=${songField.value}&artist=${artistField.value}`;
+      const formData = `song=${songField.value}&artist=${artistField.value}&description=${descriptionField.value}`;
       xhr.send(formData);
 
       return false;
@@ -128,12 +140,20 @@
             //show 
             document.getElementById("choosePlaylist").style.visibility = "visible";
             document.getElementById("songsForm").style.visibility = "visible";
+            document.getElementById("userForm").style.visibility = "visible";
+            document.getElementById("displaySongs").style.visibility = "visible";
+            document.getElementById("displayInformation").style.visibility = "visible";
+            document.getElementById("addDisplayName").style.visibility = "visible";
             break;
           case "create":
             console.log("creating");
             //hide 
             document.getElementById("choosePlaylist").style.visibility = "hidden";
             document.getElementById("songsForm").style.visibility = "hidden";
+            document.getElementById("userForm").style.visibility = "hidden";
+            document.getElementById("displaySongs").style.visibility = "hidden";
+            document.getElementById("displayInformation").style.visibility = "hidden";
+            document.getElementById("addDisplayName").style.visibility = "hidden";
             //show 
             document.getElementById("createPlaylist").style.visibility = "visible";
 
@@ -143,31 +163,76 @@
 
       //hide all when startup
       document.getElementById("songsForm").style.visibility = "hidden";
+      document.getElementById("userForm").style.visibility = "hidden";
       document.getElementById("choosePlaylist").style.visibility = "hidden";
       document.getElementById("createPlaylist").style.visibility = "hidden";
+      document.getElementById("displaySongs").style.visibility = "hidden";
+      document.getElementById("displaySongsHelper").style.visibility = "hidden";
+      document.getElementById("displayInformation").style.visibility = "hidden";
+      document.getElementById("addDisplayName").style.visibility = "hidden";
     };
 
     function addToPlaylist() {
       let x = document.getElementById("allPlaylist");
-      let textbox = document.getElementById("playlistField").value;
-      //console.log(textbox);
-      let option = document.createElement("option");
-      option.text = textbox;
-      //console.log("option picked: " + option.text);
-      x.appendChild(option);
-      content.innerHTML = `<p>Playlist added!`;
+      let textboxPlaylist = document.getElementById("playlistField").value;
 
-      for (let i = 0; i < x.options.length -1; i++) {
+      let y = document.getElementById("allNames");
+      let textboxName = document.getElementById("yourNameField").value;
+
+      //evaluate
+      const createForm = document.querySelector('#createPlaylist');
+      const createPlaylistUser = (e) => sendPost(e, createForm);
+      songsForm.addEventListener('submit', createPlaylistUser);
+
+      //console.log(textboxPlaylist);
+      let optionPlaylist = document.createElement("option");
+      optionPlaylist.text = textboxPlaylist;
+      //console.log("option picked: " + option.text);
+      x.appendChild(optionPlaylist);
+      content.innerHTML = `<p>Playlist or Name Added!</p>`;
+
+      let optionName = document.createElement("option");
+      optionName.text = textboxName;
+      y.appendChild(optionName);
+      content.innerHTML = `<p>Playlist or Name Added!</p>`;
+
+      //dealing with playlist
+      for (let i = 0; i < x.options.length - 1; i++) {
         //add in the playlist - to then get removed
-        x.appendChild(option);
+        x.appendChild(optionPlaylist);
         //remove the option - since it is a duplicate
-        if (x.options[i].value === textbox) {
-          //console.log("this is the option: " + x.options[i].value);
-          
-          x.remove(x.options.length-1);
+        if (x.options[i].value === textboxPlaylist) {
+
+          x.remove(x.options.length - 1);
           content.innerHTML = `<p>Playlist removed!</p>`;
         }
       }
+
+      //dealing with name
+      for (let j = 0; j < y.options.length - 1; j++) {
+        //add in the playlist - to then get removed
+        y.appendChild(optionName);
+
+        //remove the option - since it is a duplicate
+        if (y.options[j].value === optionName) {
+          y.remove(y.options.length - 1);
+          content.innerHTML = `<p>Playlist removed!</p>`;
+        }
+      }
+    }
+
+    /* Display a playlist or name */
+    function addDisplay() {
+      let addPlaylistDisplay = document.querySelector("#allPlaylist").value;
+      console.log(addPlaylistDisplay);
+      let addNameDisplay = document.querySelector("#allNames").value;
+      console.log(addNameDisplay);
+
+      /* input disabled display */
+      
+      let line = `<p>${addPlaylistDisplay} by ${addNameDisplay}</p>`;
+        document.querySelector("#displayInformation").innerHTML += line;
+      
     }
 
     function deleteDiv() {
@@ -185,69 +250,72 @@
     <h3>Playlist Creator</h3>
     <!-- Choose a playlist or create a new one-->
     <form id="playlistForm" action="select">
-      <label for="playlistChooser">Select or Create a Playlist:</label>
+      <label for="playlistChooser">Select or Name Playlist:</label>
       <select id="playlistSelect">
         <option disabled selected value> -- Select an option -- </option>
+        <option value="create">Name your Playlist</option>
         <option value="select">Select Playlist</option>
-        <option value="create">Create New Playlist</option>
       </select>
       <br>
-      <!-- <div id="choosePlaylist"></div> -->
+
       <div id=choosePlaylist>
         <label for="choosePlaylistLabel">Choose a Playlist:</label>
         <select id="allPlaylist">
           <option disabled selected value> -- Select an option -- </option>
-          <!-- to be deleted -->
-          <!-- <option value="october">My October</option>
-          <option value="sleepy">Sleep Playlist</option> -->
         </select>
+        <label for="chooseNameLabel">Choose a Name:</label>
+        <select id="allNames">
+          <option disabled selected value> -- Select an option -- </option>
+        </select> 
       </div>
-
       <br>
     </form>
-    <!-- <div id="createPlaylist"></div> -->
+    <div id = "addDisplayName">
+      <button class="createDisplay" onclick="addDisplay()">Display!</button>
+    </div>
+    
+
     <div id="createPlaylist">
-      <label for="playlistName">Playlist Name: </label>
+      <span class="required">*</span><label for="playlistName">Playlist Name: </label>
       <input id="playlistField" type="text" name="playlistName" />
-      <button type="createButton" onclick="addToPlaylist()">Create!</button>
+      <span class="required">*</span><label for="yourName">Your Name: </label>
+      <input id="yourNameField" type="text" name="yourName" />
+      <button class="createButton" onclick="addToPlaylist()">Create!</button>
     </div>
 
     <!-- Add a song -->
     <form id="songsForm" action="/addUser" method="post">
-      <label for="song">Song Title: </label>
+      <span class="required">*</span><label for="song">Song Title: </label>
       <input id="songField" type="text" name="song" />
-      <label for="artist">Artist: </label>
+      <span class="required">*</span><label for="artist">Artist: </label>
       <input id="artistField" type="text" name="artist" />
+      <label for="description">Description: </label>
+      <input id="descriptionField" type="text" name="description" value="N/A" />
       <input type="submit" value="Add to Playlist" />
     </form>
 
-    <!-- Testing purpose - delete later -->
-    <h3>For testing purposes</h3>
     <form id="userForm" action="/getPlaylist" method="get">
-      <select id='urlField'>
-        <option value='/getPlaylist'>/getPlaylist</option>
-      </select>
-      <select id="methodSelect">
-        <option value="GET">GET</option>
-        <option value="HEAD">HEAD</option>
-      </select>
+      <div id='displaySongsHelper'>
+        <select id='urlField'>
+          <option value='/getPlaylist'>/getPlaylist</option>
+        </select>
+        <select id="methodSelect">
+          <option value="GET">GET</option>
+          <option value="HEAD">HEAD</option>
+        </select>
+      </div>
       <input type="submit" value="Display Songs" />
     </form>
   </section>
+
   <section id="content">
   </section>
-  <!-- Example Output -->
-  <h3>Your list of Songs:</h3>
+
+  <section id="displayInformation">
+  </section>
+
   <section id="displaySongs">
-    <!-- <div id='results'>
-      <b>
-        <p class="artistName">BTS</p>
-      </b>
-      <i>
-        <p class="artistSong">Dynamite</p>
-      </i>
-      <button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button>
-    </div> -->
+    <h4>Your List of Songs:</h4>
   </section>
 </body>
 

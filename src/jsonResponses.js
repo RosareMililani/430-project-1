@@ -17,8 +17,8 @@ const respondJSONMeta = (request, response, status) => {
 
 const getPlaylist = (request, response) => {
   const responseJSON = {
-    //users: JSON.stringify(users),
-    users
+    // users: JSON.stringify(users),
+    users,
   };
 
   console.log(users);
@@ -46,6 +46,7 @@ const addUser = (request, response, body) => {
   }
 
   users[body.song].artist = body.artist;
+  users[body.song].description = body.description;
 
   if (responseCode === 201) {
     responseJSON.message = 'Created successfully';
@@ -55,8 +56,28 @@ const addUser = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
+const createPlaylistUser = (request, response, body) => {
+  const responseJSON = {
+    message: 'Song and artist are both required',
+  };
+
+  if (!body.playlistName || !body.yourName) {
+    responseJSON.id = 'missingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
+
+  const responseCode = 201;
+
+  if (responseCode === 201) {
+    responseJSON.message = 'Created successfully';
+    return respondJSON(request, response, responseCode, responseJSON);
+  }
+
+  return respondJSONMeta(request, response, responseCode);
+};
 
 module.exports = {
   getPlaylist,
+  createPlaylistUser,
   addUser,
 };
