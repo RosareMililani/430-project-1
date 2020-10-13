@@ -26,43 +26,29 @@
           document.querySelector("#displaySongs").innerHTML = "";
 
           for (let userData of Object.keys(obj.users)) {
-            console.log(userData);
-
-            document.getElementById("listing").style.visibility = "visible";
+            //console.log(userData);
 
             //format data
             let line = `<div id = 'results'>`;
             line += `<b><p class='artistName'>${obj.users[userData].song}</p></b>`;
             line += `<i><p class='artistSong'>${obj.users[userData].artist}</p></i>`;
-            line += `<p class='artistDescription'>Description: ${obj.users[userData].description}</p></div>`;
-            /* line += `<button class="btn" onclick="deleteDiv()"><i style="font-size:17px" class="fa">&#xf014;</i></button>`; */
+            line += `<p class='artistDescription'>${obj.users[userData].description}</p></div>`;
 
             document.querySelector("#displaySongs").innerHTML += line;
           }
-        }
-        /* function deleteSong() {
-        console.log("actuall being called");
-        //get this to work properly
-        let deleteTextbox = document.getElementById("deleteField").value;
-        console.log(deleteTextbox);
-        console.log("This is the field" + document.getElementById("deleteName").value)
 
-        //delete the data
-        for (let userData of Object.keys(myObject)) {
-          if (userData === deleteTextbox) {
-            delete myObject[userData];
-          }
+          //for deleting data
+          document.getElementById("deleteButton").addEventListener('click', function () {
+            //console.log("being called");
+            let deleteTextbox = document.getElementById("deleteName").value;
+            for (let userData of Object.keys(myObject)) {
+              if (userData === deleteTextbox) {
+                delete myObject[userData];
+              }
+            }
+          });
         }
-        console.log("reaching");
-      } */
-
-        document.querySelector("#deleteButton").addEventListener("click", () => {
-          console.log("being called");
-        });
       }
-
-
-
     };
 
     const handleResponse = (xhr) => {
@@ -147,10 +133,9 @@
         /* create different things based on selection */
         switch (document.querySelector("#playlistSelect").value) {
           case "select":
-            console.log("select");
-
             //hide 
             document.getElementById("createPlaylist").style.visibility = "hidden";
+            document.getElementById("deleteSongs").style.visibility = "hidden";
             //show 
             document.getElementById("choosePlaylist").style.visibility = "visible";
             document.getElementById("songsForm").style.visibility = "visible";
@@ -158,9 +143,10 @@
             document.getElementById("displaySongs").style.visibility = "visible";
             document.getElementById("displayInformation").style.visibility = "visible";
             document.getElementById("addDisplayName").style.visibility = "visible";
+            document.getElementById("basicInformation").style.visibility = "visible";      
+            content.innerHTML = "";
             break;
           case "create":
-            console.log("creating");
             //hide 
             document.getElementById("choosePlaylist").style.visibility = "hidden";
             document.getElementById("songsForm").style.visibility = "hidden";
@@ -168,12 +154,13 @@
             document.getElementById("displaySongs").style.visibility = "hidden";
             document.getElementById("displayInformation").style.visibility = "hidden";
             document.getElementById("addDisplayName").style.visibility = "hidden";
+            document.getElementById("basicInformation").style.visibility = "hidden";
+            document.getElementById("deleteSongs").style.visibility = "hidden";
             //show 
             document.getElementById("createPlaylist").style.visibility = "visible";
-
+            content.innerHTML = "";
             break;
           case "delete":
-            console.log("deleting");
             //hide
             document.getElementById("choosePlaylist").style.visibility = "hidden";
             document.getElementById("songsForm").style.visibility = "hidden";
@@ -182,6 +169,11 @@
             document.getElementById("displayInformation").style.visibility = "hidden";
             document.getElementById("addDisplayName").style.visibility = "hidden";
             document.getElementById("createPlaylist").style.visibility = "hidden";
+            document.getElementById("basicInformation").style.visibility = "hidden";
+            //show
+            document.getElementById("deleteSongs").style.visibility = "visible";
+            content.innerHTML = "";
+            break;
         }
       });
 
@@ -194,6 +186,8 @@
       document.getElementById("displaySongsHelper").style.visibility = "hidden";
       document.getElementById("displayInformation").style.visibility = "hidden";
       document.getElementById("addDisplayName").style.visibility = "hidden";
+      document.getElementById("basicInformation").style.visibility = "hidden";
+      document.getElementById("deleteSongs").style.visibility = "hidden";
     };
 
     function addToPlaylist() {
@@ -226,9 +220,8 @@
         x.appendChild(optionPlaylist);
         //remove the option - since it is a duplicate
         if (x.options[i].value === textboxPlaylist || textboxPlaylist.value == "") {
-
           x.remove(x.options.length - 1);
-          content.innerHTML = `<p>Duplicate or nothing was added!</p>`;
+          content.innerHTML = `<p>Duplicate or only one was added!</p>`;
         }
       }
 
@@ -248,9 +241,7 @@
     /* Display a playlist or name */
     function addDisplay() {
       let addPlaylistDisplay = document.querySelector("#allPlaylist").value;
-      console.log(addPlaylistDisplay);
       let addNameDisplay = document.querySelector("#allNames").value;
-      console.log(addNameDisplay);
 
       //clear if display button is click, or updated with new information
       document.querySelector("#displayInformation").innerHTML = "";
@@ -259,31 +250,6 @@
       let line = `<p>${addPlaylistDisplay} by ${addNameDisplay}</p>`;
       document.querySelector("#displayInformation").innerHTML += line;
     }
-
-    function deleteDiv() {
-      document.getElementById("results").innerHTML = "";
-      document.getElementById("results").style.border = "none";
-      //delete users.song;
-    }
-
-    /* function deleteSong(xhr, content) {
-      const obj = JSON.parse(xhr.response);
-      console.dir(obj);
-      console.log("actuall being called");
-      console.log("second call")
-      //get this to work properly
-      let deleteTextbox = document.getElementById("deleteField").value;
-      console.log(deleteTextbox);
-      console.log("This is the field" + document.getElementById("deleteName").value)
-
-      //delete the data
-      for (let userData of Object.keys(obj.users)) {
-        if (userData === deleteTextbox) {
-          delete myObject[userData];
-        }
-      }
-      console.log("reaching");
-    } */
 
     window.onload = init;
   </script>
@@ -294,7 +260,7 @@
     <h3>Playlist Creator</h3>
     <!-- Choose a playlist or create a new one-->
     <form id="playlistForm" action="select">
-      <label for="playlistChooser">Select or Name Playlist:</label>
+      <label for="playlistChooser">Playlist Choices:</label>
       <select id="playlistSelect">
         <option disabled selected value> -- Select an option -- </option>
         <option value="create">Name your Playlist</option>
@@ -367,8 +333,16 @@
   <section id="displayInformation">
   </section>
 
-  <section id="displaySongs">
+  <section id="basicInformation">
     <h4 id="listing">Your List of Songs:</h4>
+    <div id="helperDisplay">
+      <p class="helperArtist">Artist:</p>
+      <p class="helperSong">Song:</p>
+      <p class="helperDescription">Description:</p>
+    </div>
+  </section>
+  <section id="displaySongs">
+
   </section>
 </body>
 

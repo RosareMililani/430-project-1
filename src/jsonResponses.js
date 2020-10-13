@@ -1,7 +1,3 @@
-// Note this object is purely in memory
-// When node shuts down this will be cleared.
-// Same when your heroku app shuts down from inactivity
-// We will be working with databases in the next few weeks.
 const users = {};
 
 const respondJSON = (request, response, status, object) => {
@@ -17,11 +13,8 @@ const respondJSONMeta = (request, response, status) => {
 
 const getPlaylist = (request, response) => {
   const responseJSON = {
-    // users: JSON.stringify(users),
     users,
   };
-
-  console.log(users);
 
   respondJSON(request, response, 200, responseJSON);
 };

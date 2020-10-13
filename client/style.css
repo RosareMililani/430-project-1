@@ -9,7 +9,7 @@ html, body {
 h3{
   font-family: 'Courgette', cursive;
   font-size: 40px;
-  padding:15px;
+  padding:10px;
 }
 
 h4{
@@ -41,21 +41,31 @@ h4{
   padding: 12px;
 }
 
-.artistName, .artistSong, .artistDescription{
+#helperDisplay {
+  display: flex;
+  text-align: center;
+  padding: 12px;
+}
+
+.artistName, .artistSong, .artistDescription, .helperSong, .helperDescription{
   display: inline-block;
+  /* font-size:20px; */
+}
+
+/* .helperName{
   font-size:20px;
-}
+} */
 
-.artistSong
+.artistSong, .helperSong
 {
   position: absolute;
-  right: 70%;
+  right: 50%;
 }
 
-.artistDescription
+.artistDescription, .helperDescription
 {
   position: absolute;
-  right:50%;
+  right:30%;
 }
 
 .btn {
@@ -74,17 +84,17 @@ h4{
   text-align:center;
 }
 
-.buttonEdit
+/* .buttonEdit
 {
   position: absolute;
   right: 30%;
-}
+} */
 
 .required{
   color:red;
 }
 
-input[type=submit], .createButton, .createDisplay{
+input[type=submit], .createButton, .createDisplay, #deleteButton{
   background-color: #faf7ad;
   border: none;
   border-radius: 12px;
@@ -92,7 +102,7 @@ input[type=submit], .createButton, .createDisplay{
   font-family: 'Courgette', cursive;
 }
 
-input[type=submit]:hover, .createButton:hover, .createDisplay {
+input[type=submit]:hover, .createButton:hover, .createDisplay:hover, #deleteButton:hover {
   background-color: #fef76d;
   border-style: solid;
   border-radius: 12px;
